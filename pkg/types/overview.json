@@ -1,0 +1,82 @@
+{
+  "class": ["overview"],
+  "properties": {
+    "id": 12345,
+    "created_at": "2014-05-11T16:34:22+0200",
+    "modified_at": "2014-05-11T16:34:22+0200",
+    "status": 1,
+    "status_formatted": "active",
+    "url_token": "abcdef1234567890abcdef",
+    "name": "Overview ABC",
+    "description": "Description of the Overview ABC ..."
+  },
+  "entities": [
+    {
+      "class": ["owner", "user"],
+      "rel": ["http://domain.com/rels/user"],
+      "properties": {
+        "id": 100,
+        "created_at": "2014-05-11T16:34:22+0200",
+        "modified_at": "2014-05-11T16:34:22+0200",
+        "status": 1,
+        "status_formatted": "active",
+        "full_name": "Joe Doe",
+        "email": "joe.doe@domain.com"
+      },
+      "links": [
+        { "rel": ["self"], "href": "https://api.domain.com/users/100" }
+      ]
+    },
+    {
+      "class": ["payments", "collection", "payment"],
+      "rel": ["http://domain.com/rels/overview-payments"],
+      "href": "https://api.domain.com/overview/12345/payments"
+    }
+  ],
+  "actions": [
+    {
+      "name": "add-payment",
+      "class": ["payment"],
+      "title": "Add Payment in Overview",
+      "method": "POST",
+      "href": "http://api.domain.com/overviews/12345/payments",
+      "type": "application/json",
+      "fields": [
+        { "name": "paid_at", "type": "datetime", "value": "2014-05-10T11:33:22+02:00" },
+        { "name": "latitude", "type": "number", "value": 53.11 },
+        { "name": "longitude", "type": "number", "value": 14.22 },
+        { "name": "from", "type": "number", "value": 100 },
+        { "name": "to", "type": "number", "value": 101 },
+        { "name": "payment_method", "type": "text", "value": "cash" }
+        { "name": "value", "type": "number", "value": 500 },
+        { "name": "currency", "type": "text", "value": "EUR" }
+      ]
+    },
+    {
+      "name": "add-participant",
+      "class": ["participant", "user"],
+      "title": "Add Participant in Overview",
+      "method": "POST",
+      "href": "http://api.domain.com/overviews/12345/participants",
+      "type": "application/json",
+      "fields": [
+        { "name": "full_name", "type": "text", "value": "John Smith" },
+        { "name": "email", "type": "email", "value": "john.smith@domain.com" }
+      ]
+    },
+    {
+      "name": "remove-participant",
+      "class": ["participant", "user"],
+      "title": "Remove Participant from Overview",
+      "method": "DELETE",
+      "href": "http://api.domain.com/overviews/12345/participants/101"
+    }
+  ],
+  "links": [
+    { "rel": ["prev"], "href": "https://api.domain.com/overviews/12344" },
+    { "rel": ["self"], "href": "https://api.domain.com/overviews/12345" },
+    { "rel": ["next"], "href": "https://api.domain.com/overviews/12346" },
+    { "rel": ["payments"], "href": "https://api.domain.com/overviews/12345/payments" },
+    { "rel": ["participants"], "href": "https://api.domain.com/overviews/12345/participants" }
+  ]
+}

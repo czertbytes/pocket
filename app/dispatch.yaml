@@ -1,0 +1,5 @@
+application: pocket
+
+dispatch:
+- url: "*/manager/*"
+  module: manager
