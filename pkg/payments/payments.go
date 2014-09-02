@@ -40,6 +40,10 @@ func (self *Payments) FindAllActive() (t.Payments, error) {
 	return payments, nil
 }
 
+func (self *Payments) FindAllByOverviewId(overviewId t.OverviewId) (t.Payments, error) {
+	return self.Storage.FindAllByOverviewId(overviewId)
+}
+
 func (self *Payments) Find(id t.PaymentId) (t.Payment, error) {
 	payment, err := self.Storage.Find(id)
 	if err != nil {

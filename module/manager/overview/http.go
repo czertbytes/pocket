@@ -26,7 +26,7 @@ func Get(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, overview, nil
+	return http.StatusOK, nil, &overview, nil
 }
 
 func Put(url *url.URL, header http.Header, overview *t.Overview, requestContext *shttp.RequestContext) (int, http.Header, *t.Overview, error) {

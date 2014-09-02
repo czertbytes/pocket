@@ -34,7 +34,7 @@ func (self *Controller) Post(overview *t.Overview) error {
 	return self.service.Create(overview, self.RequestContext.User)
 }
 
-func (self *Controller) Get(url *url.URL) (*t.Overview, error) {
+func (self *Controller) Get(url *url.URL) (t.Overview, error) {
 	return self.service.Find(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
@@ -74,7 +74,7 @@ func (self *Controller) PostOverviewParticipant(user *t.User) error {
 		return err
 	}
 
-	return self.service.CreateParticipant(user, self.RequestContext.User)
+	return self.service.CreateParticipant(user, t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
 func (self *Controller) GetOverviewParticipants(url *url.URL) (t.Users, error) {
