@@ -14,7 +14,7 @@ func Get(url *url.URL, header http.Header, _ interface{}, RequestContext *shttp.
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, comment, nil
+	return http.StatusOK, nil, &comment, nil
 }
 
 func Delete(url *url.URL, header http.Header, _ interface{}, RequestContext *shttp.RequestContext) (int, http.Header, interface{}, error) {

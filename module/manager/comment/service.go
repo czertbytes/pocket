@@ -26,7 +26,7 @@ func NewService(RequestContext *shttp.RequestContext) *Service {
 	}
 }
 
-func (self *Service) Find(id t.CommentId, user *t.User) (*t.Comment, error) {
+func (self *Service) Find(id t.CommentId, user *t.User) (t.Comment, error) {
 	return self.find(id, user)
 }
 
@@ -38,15 +38,15 @@ func (self *Service) Delete(id t.CommentId, user *t.User) error {
 	return self.Comments.Delete(id)
 }
 
-func (self *Service) find(id t.CommentId, user *t.User) (*t.Comment, error) {
+func (self *Service) find(id t.CommentId, user *t.User) (t.Comment, error) {
 	comment, err := self.Comments.Find(id)
 	if err != nil {
-		return nil, err
+		return t.Comment{}, err
 	}
 
 	if comment.UserId != user.Id {
-		return nil, fmt.Errorf("Comment is not yours!")
+		return t.Comment{}, fmt.Errorf("Comment is not yours!")
 	}
 
-	return &comment, nil
+	return comment, nil
 }

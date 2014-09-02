@@ -25,7 +25,7 @@ func NewController(RequestContext *shttp.RequestContext) *Controller {
 	}
 }
 
-func (self *Controller) Get(url *url.URL) (*t.Comment, error) {
+func (self *Controller) Get(url *url.URL) (t.Comment, error) {
 	return self.service.Find(t.CommentId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
