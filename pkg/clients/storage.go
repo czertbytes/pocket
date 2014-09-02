@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"fmt"
 	"time"
 
 	"appengine"
@@ -14,6 +15,10 @@ const (
 	kind string = "client"
 )
 
+var (
+	ErrClientNotFound error = fmt.Errorf("client: Client not found!")
+)
+
 type Storage struct {
 	AppEngineContext appengine.Context
 	storage          *gae.Storage
@@ -22,7 +27,7 @@ type Storage struct {
 func NewStorage(appEngineContext appengine.Context) *Storage {
 	return &Storage{
 		AppEngineContext: appEngineContext,
-		storage:          NewStorage(appEngineContext, kind),
+		storage:          gae.NewStorage(appEngineContext, kind),
 	}
 }
 
@@ -43,7 +48,7 @@ func (self *Storage) Save(client *t.Client) error {
 	return nil
 }
 
-func (self *Storage) FindAllByStatus(status t.clientstatus) (t.Clients, error) {
+func (self *Storage) FindAllByStatus(status t.ClientStatus) (t.Clients, error) {
 	var clients t.Clients
 
 	query := datastore.NewQuery(kind).
@@ -67,7 +72,7 @@ func (self *Storage) FindAllByStatus(status t.clientstatus) (t.Clients, error) {
 }
 
 func (self *Storage) FindAllActive() (t.Clients, error) {
-	return self.FindAllByStatus(t.clientstatusActive)
+	return self.FindAllByStatus(t.ClientStatusActive)
 }
 
 func (self *Storage) Find(id t.ClientId) (t.Client, error) {
@@ -83,10 +88,38 @@ func (self *Storage) Find(id t.ClientId) (t.Client, error) {
 	return client, nil
 }
 
+func (self *Storage) FindByClientIdAndToken(clientId t.ClientClientId, token string) (t.Client, error) {
+	var clients t.Clients
+
+	query := datastore.NewQuery(kind).
+		Filter("client_id =", clientId).
+		Filter("status =", t.ClientStatusActive)
+
+	ids, err := self.storage.FindAll(query, &clients)
+	if err != nil {
+		return t.Client{}, err
+	}
+
+	if len(ids) == 0 {
+		return t.Client{}, ErrClientNotFound
+	}
+
+	for i, client := range clients {
+		if client.Token == token {
+			clients[i].Id = t.ClientId(ids[i])
+			clients[i].SetFormattedValues()
+
+			return clients[i], nil
+		}
+	}
+
+	return t.Client{}, ErrClientNotFound
+}
+
 func (self *Storage) FindMulti(ids t.ClientIds) (t.Clients, error) {
 	var clients t.Clients
 
-	if err := self.storage.FindMulti([]int64(ids)); err != nil {
+	if err := self.storage.FindMulti(ids.AsInt64Arr(), &clients); err != nil {
 		return nil, err
 	}
 

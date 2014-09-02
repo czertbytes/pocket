@@ -86,7 +86,7 @@ func (self *Storage) Find(id t.OverviewId) (t.Overview, error) {
 func (self *Storage) FindMulti(ids t.OverviewIds) (t.Overviews, error) {
 	var overviews t.Overviews
 
-	if err := self.storage.FindMulti([]int64(ids)); err != nil {
+	if err := self.storage.FindMulti(ids.AsInt64Arr()); err != nil {
 		return nil, err
 	}
 

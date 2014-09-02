@@ -22,31 +22,22 @@ func NewValidator(RequestContext *shttp.RequestContext) *Validator {
 }
 
 var (
-	ErrAuthOriginNameRequired error = errors.New("client: Field 'name' is required!")
-	ErrAuthOriginNameNotValid error = errors.New("client: Field 'name' is not valid!")
+	ErrAuthOriginServiceRequired error = errors.New("client: Field 'auth_origin_service' is required!")
+	ErrAuthOriginServiceNotValid error = errors.New("client: Field 'auth_origin_service' is not valid!")
 )
 
 func (self *Validator) Create(client *t.Client) error {
-	if err := self.createAuthOriginName(client.AuthOrigin.Name); err != nil {
+	if err := self.createAuthOriginService(client.AuthOrigin.Service); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (self *Validator) createAuthOriginName(name string) error {
-	if len(Name) < 1 {
-		return ErrAuthOriginNameRequired
+func (self *Validator) createAuthOriginService(service t.AuthOriginService) error {
+	if service == t.AuthOriginServiceUnknown {
+		return ErrAuthOriginServiceNotValid
 	}
 
-	switch name {
-	case "googleplus":
-		return nil
-	case "facebook":
-		return nil
-	default:
-		return ErrAuthOriginNameNotValid
-	}
-
-	return ErrAuthOriginNameNotValid
+	return nil
 }

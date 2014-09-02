@@ -1,9 +1,26 @@
 package types
 
+import (
+	"crypto/sha1"
+	"fmt"
+	"io"
+	"time"
+)
+
 type ClientId int64
 type ClientIds []ClientId
 type ClientClientId string
 type ClientStatus int8
+
+func (self ClientIds) AsInt64Arr() []int64 {
+	ids := make([]int64, len(self))
+
+	for i, id := range self {
+		ids[i] = int64(id)
+	}
+
+	return ids
+}
 
 func ParseClientStatus(value int) ClientStatus {
 	switch value {
@@ -59,4 +76,38 @@ func (self *Client) SetStatusFormatted() {
 	self.StatusFormatted = self.Status.String()
 }
 
+func (self *Client) GenerateClientId() {
+	clientId := hash(
+		"53088f0c8f7e74488e07807dfc022542",
+		self.Id,
+	)
+
+	self.ClientId = ClientClientId(clientId)
+}
+
+func (self *Client) RegenerateToken() {
+	tokenValue := hash(
+		"eb3b8da16fda97e84f6a13b2f94cda93",
+		self.ClientId,
+		self.Id,
+	)
+
+	self.ClientToken = ClientToken{
+		Value:    tokenValue,
+		ExpireAt: time.Now().Add(4 * time.Hour),
+	}
+}
+
 type Clients []Client
+
+func hash(values ...interface{}) string {
+	hash := sha1.New()
+
+	for _, value := range values {
+		io.WriteString(hash, fmt.Sprintf("%s", value))
+	}
+
+	io.WriteString(hash, fmt.Sprintf("timestamp%d", time.Now().UnixNano()))
+
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}

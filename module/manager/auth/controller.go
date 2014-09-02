@@ -33,6 +33,6 @@ func (self *Controller) Post(client *t.Client) error {
 	return self.service.Create(client, self.RequestContext.User)
 }
 
-func (self *Controller) Delete(url *url.URL) (*t.Overview, error) {
-	return self.service.Find(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
+func (self *Controller) Delete(url *url.URL) error {
+	return self.service.Delete(self.RequestContext.Client.Id, self.RequestContext.User)
 }

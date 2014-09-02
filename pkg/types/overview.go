@@ -4,6 +4,16 @@ type OverviewId int64
 type OverviewIds []OverviewId
 type OverviewStatus int8
 
+func (self OverviewIds) AsInt64Arr() []int64 {
+	ids := make([]int64, len(self))
+
+	for i, id := range self {
+		ids[i] = int64(id)
+	}
+
+	return ids
+}
+
 func ParseOverviewStatus(value int) OverviewStatus {
 	switch value {
 	case -1:

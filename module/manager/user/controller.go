@@ -34,25 +34,13 @@ func (self *Controller) Delete(url *url.URL) error {
 }
 
 func (self *Controller) GetOverviews(url *url.URL) (t.Overviews, error) {
-	return self.service.Find(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
+	return self.service.FindAllOverviews(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
 func (self *Controller) GetPayments(url *url.URL) (t.Payments, error) {
-	return self.service.Find(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
+	return self.service.FindAllPayments(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
 func (self *Controller) GetComments(url *url.URL) (t.Comments, error) {
-	return self.service.Find(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
-}
-
-func (self *Controller) GetMeOverviews(url *url.URL) (t.Overviews, error) {
-	return self.service.Find(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
-}
-
-func (self *Controller) GetMePayments(url *url.URL) (t.Payments, error) {
-	return self.service.Find(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
-}
-
-func (self *Controller) GetMeComments(url *url.URL) (t.Comments, error) {
-	return self.service.Find(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
+	return self.service.FindAllComments(t.UserId(self.RequestContext.EntityId), self.RequestContext.User)
 }

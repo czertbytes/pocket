@@ -6,6 +6,16 @@ type PaymentId int64
 type PaymentIds []PaymentId
 type PaymentStatus int8
 
+func (self PaymentIds) AsInt64Arr() []int64 {
+	ids := make([]int64, len(self))
+
+	for i, id := range self {
+		ids[i] = int64(id)
+	}
+
+	return ids
+}
+
 func ParsePaymentStatus(value int) PaymentStatus {
 	switch value {
 	case -1:

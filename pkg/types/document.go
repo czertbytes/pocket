@@ -6,6 +6,16 @@ type DocumentId int64
 type DocumentIds []DocumentId
 type DocumentStatus int8
 
+func (self DocumentIds) AsInt64Arr() []int64 {
+	ids := make([]int64, len(self))
+
+	for i, id := range self {
+		ids[i] = int64(id)
+	}
+
+	return ids
+}
+
 func ParseDocumentStatus(value int) DocumentStatus {
 	switch value {
 	case -1:

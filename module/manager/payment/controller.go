@@ -25,14 +25,54 @@ func NewController(RequestContext *shttp.RequestContext) *Controller {
 	}
 }
 
-func (self *Controller) Post(overview *t.Overview) error {
-	if err := self.validator.Create(overview); err != nil {
+func (self *Controller) Post(payment *t.Payment) error {
+	if err := self.validator.Create(payment); err != nil {
 		return err
 	}
 
-	return self.service.Create(overview, self.RequestContext.User)
+	return self.service.Create(payment, self.RequestContext.User)
 }
 
-func (self *Controller) Get(url *url.URL) (*t.Overview, error) {
-	return self.service.Find(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
+func (self *Controller) Get(url *url.URL) (*t.Payment, error) {
+	return self.service.Find(t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
+}
+
+func (self *Controller) Put(url *url.URL, payment *t.Payment) (*t.Payment, error) {
+	if err := self.validator.Update(payment); err != nil {
+		return nil, err
+	}
+
+	return self.service.Update(payment, self.RequestContext.User)
+}
+
+func (self *Controller) Patch(url *url.URL, payment *t.Payment) (*t.Payment, error) {
+	if err := self.validator.Patch(url, payment); err != nil {
+		return nil, err
+	}
+
+	return self.service.Update(payment, self.RequestContext.User)
+}
+
+func (self *Controller) Delete(url *url.URL) error {
+	return self.service.Delete(t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
+}
+
+func (self *Controller) PostDocuments() error {
+	return nil
+}
+
+func (self *Controller) GetDocuments(url *url.URL) (t.Documents, error) {
+	return self.service.FindAllDocuments(t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
+}
+
+func (self *Controller) PostComment(comment *t.Comment) error {
+	if err := self.validator.CreateComment(comment); err != nil {
+		return err
+	}
+
+	return self.service.CreateComment(comment, self.RequestContext.User)
+}
+
+func (self *Controller) GetComments(url *url.URL) (t.Comments, error) {
+	return self.service.FindAllComments(t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
 }

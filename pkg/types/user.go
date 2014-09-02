@@ -4,6 +4,16 @@ type UserId int64
 type UserIds []UserId
 type UserStatus int8
 
+func (self UserIds) AsInt64Arr() []int64 {
+	ids := make([]int64, len(self))
+
+	for i, id := range self {
+		ids[i] = int64(id)
+	}
+
+	return ids
+}
+
 func ParseUserStatus(value int) UserStatus {
 	switch value {
 	case -1:

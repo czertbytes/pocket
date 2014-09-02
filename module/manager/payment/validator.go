@@ -1,6 +1,8 @@
 package payment
 
 import (
+	"net/url"
+
 	"appengine"
 
 	shttp "github.com/czertbytes/pocket/pkg/http"
@@ -20,5 +22,17 @@ func NewValidator(RequestContext *shttp.RequestContext) *Validator {
 }
 
 func (self *Validator) Create(payment *t.Payment) error {
+	return nil
+}
+
+func (self *Validator) Update(payment *t.Payment) error {
+	return nil
+}
+
+func (self *Validator) Patch(url *url.URL, payment *t.Payment) error {
+	return nil
+}
+
+func (self *Validator) CreateComment(comment *t.Comment) error {
 	return nil
 }

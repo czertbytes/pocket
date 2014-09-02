@@ -31,9 +31,8 @@ func (self *Service) Find(id t.CommentId, user *t.User) (*t.Comment, error) {
 }
 
 func (self *Service) Delete(id t.CommentId, user *t.User) error {
-	comment, err := self.find(id, user)
-	if err != nil {
-		return nil, err
+	if _, err := self.find(id, user); err != nil {
+		return err
 	}
 
 	return self.Comments.Delete(id)
@@ -46,8 +45,8 @@ func (self *Service) find(id t.CommentId, user *t.User) (*t.Comment, error) {
 	}
 
 	if comment.UserId != user.Id {
-		return nil, fmt.Errorf("Comment is not your!")
+		return nil, fmt.Errorf("Comment is not yours!")
 	}
 
-	return comment, nil
+	return &comment, nil
 }

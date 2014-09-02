@@ -22,7 +22,7 @@ type Storage struct {
 func NewStorage(appEngineContext appengine.Context) *Storage {
 	return &Storage{
 		AppEngineContext: appEngineContext,
-		storage:          NewStorage(appEngineContext, kind),
+		storage:          gae.NewStorage(appEngineContext, kind),
 	}
 }
 
@@ -86,7 +86,7 @@ func (self *Storage) Find(id t.UserId) (t.User, error) {
 func (self *Storage) FindMulti(ids t.UserIds) (t.Users, error) {
 	var users t.Users
 
-	if err := self.storage.FindMulti([]int64(ids)); err != nil {
+	if err := self.storage.FindMulti(ids.AsInt64Arr(), &users); err != nil {
 		return nil, err
 	}
 

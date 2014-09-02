@@ -62,26 +62,32 @@ func Mux() *tt.TrieServeMux {
 	mux.Handle("GET", "/manager/users/{id}/overviews", ManagerHandler(user.GetOverviews))
 	mux.Handle("GET", "/manager/users/{id}/payments", ManagerHandler(user.GetPayments))
 	mux.Handle("GET", "/manager/users/{id}/comments", ManagerHandler(user.GetComments))
-	mux.Handle("GET", "/manager/users/me", ManagerMeHandler(user.GetMe))
-	mux.Handle("GET", "/manager/users/me/overviews", ManagerMeHandler(user.GetMeOverviews))
-	mux.Handle("GET", "/manager/users/me/payments", ManagerMeHandler(user.GetMePayments))
-	mux.Handle("GET", "/manager/users/me/comments", ManagerMeHandler(user.GetMeComments))
+	mux.Handle("GET", "/manager/users/me", ManagerHandler(user.GetMe))
+	mux.Handle("GET", "/manager/users/me/overviews", ManagerHandler(user.GetMeOverviews))
+	mux.Handle("GET", "/manager/users/me/payments", ManagerHandler(user.GetMePayments))
+	mux.Handle("GET", "/manager/users/me/comments", ManagerHandler(user.GetMeComments))
 
 	return mux
 }
 
 func ManagerHandler(handler interface{}) http.Handler {
-	return shttp.AppEngineHandled(tt.Marshaled(handler))
+	return shttp.PocketHandler(
+		shttp.AuthHandled(
+			shttp.UserHandled(
+				tt.Marshaled(
+					handler))))
 }
 
-func ManagerMeHandler(handler interface{}) http.Handler {
-	return shttp.AppEngineHandled(tt.Marshaled(handler))
-}
-
-func ShiftManagerUploadHandler(handler interface{}) http.Handler {
-	return shttp.AppEngineHandled(tt.Marshaled(handler))
+func ManagerUploadHandler(handler shttp.UploadFunc) http.Handler {
+	return shttp.PocketHandler(
+		shttp.AuthHandled(
+			shttp.UserHandled(
+				shttp.UploadHandled(
+					handler))))
 }
 
 func ManagerPublicHandler(handler interface{}) http.Handler {
-	return shttp.AppEngineHandled(tt.Marshaled(handler))
+	return shttp.PocketHandler(
+		tt.Marshaled(
+			handler))
 }

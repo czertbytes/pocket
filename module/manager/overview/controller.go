@@ -64,3 +64,19 @@ func (self *Controller) Patch(url *url.URL, overview *t.Overview) error {
 func (self *Controller) Delete(url *url.URL) error {
 	return self.service.Delete(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
 }
+
+func (self *Controller) GetOverviewPayments(url *url.URL) (t.Payments, error) {
+	return self.service.FindAllPayments(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
+}
+
+func (self *Controller) PostOverviewParticipant(user *t.User) error {
+	if err := self.validator.CreateParticipant(user); err != nil {
+		return err
+	}
+
+	return self.service.CreateParticipant(user, self.RequestContext.User)
+}
+
+func (self *Controller) GetOverviewParticipants(url *url.URL) (t.Users, error) {
+	return self.service.FindAllParticipants(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
+}

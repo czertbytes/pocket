@@ -50,3 +50,20 @@ func (self *Service) Patch(overview *t.Overview, fields []string, user *t.User) 
 func (self *Service) Delete(id t.OverviewId, user *t.User) error {
 	return nil
 }
+
+func (self *Service) FindAllPayments(id t.OverviewId, user *t.User) (t.Payments, error) {
+	return nil, nil
+}
+
+func (self *Service) CreateParticipant(participant, user *t.User) error {
+
+	if err := self.notificator.CreateParticipant(participant); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (self *Service) FindAllParticipants(id t.OverviewId, user *t.User) (t.Users, error) {
+	return nil, nil
+}
