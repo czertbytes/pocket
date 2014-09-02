@@ -116,6 +116,26 @@ func (self *Service) Delete(id t.OverviewId, user *t.User) error {
 	return nil
 }
 
+func (self *Service) CreatePayment(payment *t.Payment, id t.OverviewId, user *t.User) error {
+	overview, err := self.getOverview(id, user)
+	if err != nil {
+		return err
+	}
+
+	payment.FromId = user.Id
+	payment.From = *user
+	payment.OverviewId = overview.Id
+	if err := self.Payments.Create(payment); err != nil {
+		return err
+	}
+
+	if err := self.notificator.CreatePayment(payment); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (self *Service) FindAllPayments(id t.OverviewId, user *t.User) (t.Payments, error) {
 	if _, err := self.getOverview(id, user); err != nil {
 		return nil, err

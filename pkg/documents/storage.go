@@ -70,6 +70,30 @@ func (self *Storage) FindAllActive() (t.Documents, error) {
 	return self.FindAllByStatus(t.DocumentStatusActive)
 }
 
+func (self *Storage) FindAllByPaymentId(paymentId t.PaymentId) (t.Documents, error) {
+	var documents t.Documents
+
+	query := datastore.NewQuery(kind).
+		Filter("payment_id=", paymentId).
+		Filter("status =", t.DocumentStatusActive)
+
+	ids, err := self.storage.FindAll(query, &documents)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) == 0 {
+		return make(t.Documents, 0), nil
+	}
+
+	for i, _ := range documents {
+		documents[i].Id = t.DocumentId(ids[i])
+		documents[i].SetFormattedValues()
+	}
+
+	return documents, nil
+}
+
 func (self *Storage) Find(id t.DocumentId) (t.Document, error) {
 	var document t.Document
 

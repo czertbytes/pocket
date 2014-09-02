@@ -65,6 +65,14 @@ func (self *Controller) Delete(url *url.URL) error {
 	return self.service.Delete(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
+func (self *Controller) PostOverviewPayment(payment *t.Payment) error {
+	if err := self.validator.CreatePayment(payment); err != nil {
+		return err
+	}
+
+	return self.service.CreatePayment(payment, t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
+}
+
 func (self *Controller) GetOverviewPayments(url *url.URL) (t.Payments, error) {
 	return self.service.FindAllPayments(t.OverviewId(self.RequestContext.EntityId), self.RequestContext.User)
 }

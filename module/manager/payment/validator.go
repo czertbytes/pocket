@@ -1,8 +1,6 @@
 package payment
 
 import (
-	"net/url"
-
 	"appengine"
 
 	shttp "github.com/czertbytes/pocket/pkg/http"
@@ -29,7 +27,7 @@ func (self *Validator) Update(payment *t.Payment) error {
 	return nil
 }
 
-func (self *Validator) Patch(url *url.URL, payment *t.Payment) error {
+func (self *Validator) Patch(payment *t.Payment, fields []string) error {
 	return nil
 }
 

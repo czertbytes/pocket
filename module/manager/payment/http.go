@@ -12,39 +12,29 @@ const (
 	LocationPath = "http://api.tripmoneymgmt.com/manager/overviews"
 )
 
-func Post(url *url.URL, header http.Header, payment *t.Payment, requestContext *shttp.RequestContext) (int, http.Header, *t.Payment, error) {
-	if err := NewController(requestContext).Post(payment); err != nil {
-		return 0, nil, nil, err
-	}
-
-	return http.StatusCreated, nil, payment, nil
-}
-
 func Get(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, *t.Payment, error) {
 	payment, err := NewController(requestContext).Get(url)
 	if err != nil {
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, payment, nil
+	return http.StatusOK, nil, &payment, nil
 }
 
 func Put(url *url.URL, header http.Header, payment *t.Payment, requestContext *shttp.RequestContext) (int, http.Header, *t.Payment, error) {
-	updatedPayment, err := NewController(requestContext).Put(url, payment)
-	if err != nil {
+	if err := NewController(requestContext).Put(url, payment); err != nil {
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, updatedPayment, nil
+	return http.StatusOK, nil, payment, nil
 }
 
 func Patch(url *url.URL, header http.Header, payment *t.Payment, requestContext *shttp.RequestContext) (int, http.Header, *t.Payment, error) {
-	patchedPayment, err := NewController(requestContext).Patch(url, payment)
-	if err != nil {
+	if err := NewController(requestContext).Patch(url, payment); err != nil {
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, patchedPayment, nil
+	return http.StatusOK, nil, payment, nil
 }
 
 func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, interface{}, error) {

@@ -27,6 +27,10 @@ func (self *Notificator) Update(overview *t.Overview) error {
 	return nil
 }
 
+func (self *Notificator) CreatePayment(payment *t.Payment) error {
+	return nil
+}
+
 func (self *Notificator) CreateParticipant(participant *t.User) error {
 	return nil
 }

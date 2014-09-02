@@ -23,6 +23,10 @@ func (self *Notificator) Create(payment *t.Payment) error {
 	return nil
 }
 
+func (self *Notificator) Update(payment *t.Payment) error {
+	return nil
+}
+
 func (self *Notificator) CreateComment(comment *t.Comment) error {
 	return nil
 }

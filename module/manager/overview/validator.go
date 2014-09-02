@@ -31,6 +31,10 @@ func (self *Validator) Patch(overview *t.Overview, fields []string) error {
 	return nil
 }
 
+func (self *Validator) CreatePayment(payment *t.Payment) error {
+	return nil
+}
+
 func (self *Validator) CreateParticipant(user *t.User) error {
 	return nil
 }

@@ -2,6 +2,7 @@ package payment
 
 import (
 	"net/url"
+	"strings"
 
 	"appengine"
 
@@ -25,32 +26,31 @@ func NewController(RequestContext *shttp.RequestContext) *Controller {
 	}
 }
 
-func (self *Controller) Post(payment *t.Payment) error {
-	if err := self.validator.Create(payment); err != nil {
-		return err
-	}
-
-	return self.service.Create(payment, self.RequestContext.User)
-}
-
-func (self *Controller) Get(url *url.URL) (*t.Payment, error) {
+func (self *Controller) Get(url *url.URL) (t.Payment, error) {
 	return self.service.Find(t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
-func (self *Controller) Put(url *url.URL, payment *t.Payment) (*t.Payment, error) {
+func (self *Controller) Put(url *url.URL, payment *t.Payment) error {
+	payment.Id = t.PaymentId(self.RequestContext.EntityId)
+
 	if err := self.validator.Update(payment); err != nil {
-		return nil, err
+		return err
 	}
 
 	return self.service.Update(payment, self.RequestContext.User)
 }
 
-func (self *Controller) Patch(url *url.URL, payment *t.Payment) (*t.Payment, error) {
-	if err := self.validator.Patch(url, payment); err != nil {
-		return nil, err
+func (self *Controller) Patch(url *url.URL, payment *t.Payment) error {
+	patchFields := url.Query().Get("fields")
+	fields := strings.Split(patchFields, ",")
+
+	payment.Id = t.PaymentId(self.RequestContext.EntityId)
+
+	if err := self.validator.Patch(payment, fields); err != nil {
+		return err
 	}
 
-	return self.service.Update(payment, self.RequestContext.User)
+	return self.service.Patch(payment, fields, self.RequestContext.User)
 }
 
 func (self *Controller) Delete(url *url.URL) error {
@@ -70,7 +70,7 @@ func (self *Controller) PostComment(comment *t.Comment) error {
 		return err
 	}
 
-	return self.service.CreateComment(comment, self.RequestContext.User)
+	return self.service.CreateComment(comment, t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
 func (self *Controller) GetComments(url *url.URL) (t.Comments, error) {

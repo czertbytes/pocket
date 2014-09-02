@@ -53,6 +53,14 @@ func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *sht
 	return http.StatusNoContent, nil, nil, nil
 }
 
+func PostPayments(url *url.URL, header http.Header, payment *t.Payment, requestContext *shttp.RequestContext) (int, http.Header, *t.Payment, error) {
+	if err := NewController(requestContext).PostOverviewPayment(payment); err != nil {
+		return 0, nil, nil, err
+	}
+
+	return http.StatusCreated, nil, payment, nil
+}
+
 func GetPayments(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, t.Payments, error) {
 	payments, err := NewController(requestContext).GetOverviewPayments(url)
 	if err != nil {

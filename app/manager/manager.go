@@ -41,12 +41,12 @@ func Mux() *tt.TrieServeMux {
 	mux.Handle("PUT", "/manager/overviews/{id}", ManagerHandler(overview.Put))
 	mux.Handle("PATCH", "/manager/overviews/{id}", ManagerHandler(overview.Patch))
 	mux.Handle("DELETE", "/manager/overviews/{id}", ManagerHandler(overview.Delete))
+	mux.Handle("POST", "/manager/overviews/{id}/payments", ManagerHandler(overview.PostPayments))
 	mux.Handle("GET", "/manager/overviews/{id}/payments", ManagerHandler(overview.GetPayments))
 	mux.Handle("POST", "/manager/overviews/{id}/participants", ManagerHandler(overview.PostParticipants))
 	mux.Handle("GET", "/manager/overviews/{id}/participants", ManagerHandler(overview.GetParticipants))
 
 	// Payment
-	mux.Handle("POST", "/manager/payments", ManagerHandler(payment.Post))
 	mux.Handle("GET", "/manager/payments/{id}", ManagerHandler(payment.Get))
 	mux.Handle("PUT", "/manager/payments/{id}", ManagerHandler(payment.Put))
 	mux.Handle("PATCH", "/manager/payments/{id}", ManagerHandler(payment.Patch))
