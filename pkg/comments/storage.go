@@ -107,6 +107,30 @@ func (self *Storage) FindAllByPaymentId(paymentId t.PaymentId) (t.Comments, erro
 	return comments, nil
 }
 
+func (self *Storage) FindAllByUserId(userId t.UserId) (t.Comments, error) {
+	var comments t.Comments
+
+	query := datastore.NewQuery(kind).
+		Filter("user_id =", userId).
+		Filter("status =", t.CommentStatusActive)
+
+	ids, err := self.storage.FindAll(query, &comments)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) == 0 {
+		return make(t.Comments, 0), nil
+	}
+
+	for i, _ := range comments {
+		comments[i].Id = t.CommentId(ids[i])
+		comments[i].SetFormattedValues()
+	}
+
+	return comments, nil
+}
+
 func (self *Storage) FindMulti(ids t.CommentIds) (t.Comments, error) {
 	var comments t.Comments
 

@@ -48,6 +48,10 @@ func (self *Comments) FindAllByPaymentId(paymentId t.PaymentId) (t.Comments, err
 	return self.Storage.FindAllByPaymentId(paymentId)
 }
 
+func (self *Comments) FindAllByUserId(userId t.UserId) (t.Comments, error) {
+	return self.Storage.FindAllByUserId(userId)
+}
+
 func (self *Comments) Find(id t.CommentId) (t.Comment, error) {
 	comment, err := self.Storage.Find(id)
 	if err != nil {

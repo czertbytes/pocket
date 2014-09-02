@@ -44,6 +44,10 @@ func (self *Payments) FindAllByOverviewId(overviewId t.OverviewId) (t.Payments, 
 	return self.Storage.FindAllByOverviewId(overviewId)
 }
 
+func (self *Payments) FindAllByUserId(userId t.UserId) (t.Payments, error) {
+	return self.Storage.FindAllByUserId(userId)
+}
+
 func (self *Payments) Find(id t.PaymentId) (t.Payment, error) {
 	payment, err := self.Storage.Find(id)
 	if err != nil {

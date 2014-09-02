@@ -70,6 +70,30 @@ func (self *Storage) FindAllActive() (t.Overviews, error) {
 	return self.FindAllByStatus(t.OverviewStatusActive)
 }
 
+func (self *Storage) FindAllByUserId(userId t.UserId) (t.Overviews, error) {
+	var overviews t.Overviews
+
+	query := datastore.NewQuery(kind).
+		Filter("user_id =", userId).
+		Filter("status =", t.OverviewStatusActive)
+
+	ids, err := self.storage.FindAll(query, &overviews)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) == 0 {
+		return make(t.Overviews, 0), nil
+	}
+
+	for i, _ := range overviews {
+		overviews[i].Id = t.OverviewId(ids[i])
+		overviews[i].SetFormattedValues()
+	}
+
+	return overviews, nil
+}
+
 func (self *Storage) Find(id t.OverviewId) (t.Overview, error) {
 	var overview t.Overview
 

@@ -14,7 +14,7 @@ func Get(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, user, nil
+	return http.StatusOK, nil, &user, nil
 }
 
 func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, interface{}, error) {
@@ -58,7 +58,7 @@ func GetMe(url *url.URL, header http.Header, _ interface{}, requestContext *shtt
 		return 0, nil, nil, err
 	}
 
-	return http.StatusOK, nil, user, nil
+	return http.StatusOK, nil, &user, nil
 }
 
 func GetMeOverviews(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, t.Overviews, error) {

@@ -40,6 +40,10 @@ func (self *Overviews) FindAllActive() (t.Overviews, error) {
 	return overviews, nil
 }
 
+func (self *Overviews) FindAllByUserId(userId t.UserId) (t.Overviews, error) {
+	return self.Storage.FindAllByUserId(userId)
+}
+
 func (self *Overviews) Find(id t.OverviewId) (t.Overview, error) {
 	overview, err := self.Storage.Find(id)
 	if err != nil {
