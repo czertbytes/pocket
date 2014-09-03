@@ -1,6 +1,8 @@
 package documents
 
 import (
+	"mime/multipart"
+
 	"appengine"
 
 	t "github.com/czertbytes/pocket/pkg/types"
@@ -68,4 +70,8 @@ func (self *Documents) Update(document t.Document) (t.Document, error) {
 
 func (self *Documents) Delete(id t.DocumentId) error {
 	return self.Storage.Delete(id)
+}
+
+func (self *Documents) CreateFile(part *multipart.Part) (string, error) {
+	return self.Storage.SaveFile(part)
 }

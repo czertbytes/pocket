@@ -1,7 +1,5 @@
 package types
 
-import "appengine"
-
 type DocumentId int64
 type DocumentIds []DocumentId
 type DocumentStatus int8
@@ -56,8 +54,7 @@ type Document struct {
 	Owner   User   `json:"owner" datastore:"-"`
 
 	// Internal fields
-	PaymentId PaymentId         `json:"-" datastore:"payment_id"`
-	BlobKey   appengine.BlobKey `json:"-" datastore:"blob_key"`
+	PaymentId PaymentId `json:"-" datastore:"payment_id"`
 }
 
 func (self *Document) SetFormattedValues() {

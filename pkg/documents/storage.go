@@ -46,7 +46,7 @@ func (self *Storage) Save(document *t.Document) error {
 	return nil
 }
 
-func (self *Storage) SaveFile(part *multipart.Part) (*gs.CloudObject, error) {
+func (self *Storage) SaveFile(part *multipart.Part) (string, error) {
 	name := t.Hash(
 		"a3ebf9b990440119c8dbc27cf1ba81be",
 		part.FileName(),
@@ -58,10 +58,10 @@ func (self *Storage) SaveFile(part *multipart.Part) (*gs.CloudObject, error) {
 		WithContentType(part.Header["Content-Type"][0])
 
 	if err := self.cloud.Save(cloudObject); err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return cloudObject, nil
+	return cloudObject.URLPath(), nil
 }
 
 func (self *Storage) FindAllByStatus(status t.DocumentStatus) (t.Documents, error) {

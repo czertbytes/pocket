@@ -100,6 +100,23 @@ func (self *Service) Delete(id t.PaymentId, user *t.User) error {
 }
 
 func (self *Service) CreateDocument(part *multipart.Part, id t.PaymentId, user *t.User) error {
+	url, err := self.Documents.CreateFile(part)
+	if err != nil {
+		return err
+	}
+
+	document := &t.Document{
+		Status:    t.DocumentStatusActive,
+		URL:       url,
+		OwnerId:   user.Id,
+		Owner:     *user,
+		PaymentId: id,
+	}
+
+	if err := self.Documents.Create(document); err != nil {
+		return err
+	}
+
 	return nil
 }
 
