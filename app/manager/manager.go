@@ -11,13 +11,13 @@ import (
 	"github.com/czertbytes/pocket/module/manager/overview"
 	"github.com/czertbytes/pocket/module/manager/payment"
 	"github.com/czertbytes/pocket/module/manager/user"
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 )
 
 func init() {
 	log.SetFlags(log.Ltime | log.Lmicroseconds | log.Lshortfile)
 
-	http.Handle("/", tt.WithContext(Mux(), shttp.RequestContext{}))
+	http.Handle("/", tt.WithContext(Mux(), h.RequestContext{}))
 }
 
 func Mux() *tt.TrieServeMux {
@@ -71,23 +71,23 @@ func Mux() *tt.TrieServeMux {
 }
 
 func ManagerHandler(handler interface{}) http.Handler {
-	return shttp.PocketHandler(
-		shttp.AuthHandled(
-			shttp.UserHandled(
+	return h.PocketHandler(
+		h.AuthHandled(
+			h.UserHandled(
 				tt.Marshaled(
 					handler))))
 }
 
-func ManagerUploadHandler(handler shttp.UploadFunc) http.Handler {
-	return shttp.PocketHandler(
-		shttp.AuthHandled(
-			shttp.UserHandled(
-				shttp.UploadHandled(
+func ManagerUploadHandler(handler h.UploadFunc) http.Handler {
+	return h.PocketHandler(
+		h.AuthHandled(
+			h.UserHandled(
+				h.UploadHandled(
 					handler))))
 }
 
 func ManagerPublicHandler(handler interface{}) http.Handler {
-	return shttp.PocketHandler(
+	return h.PocketHandler(
 		tt.Marshaled(
 			handler))
 }

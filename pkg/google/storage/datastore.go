@@ -1,23 +1,23 @@
-package gae
+package storage
 
 import (
 	"appengine"
 	"appengine/datastore"
 )
 
-type Storage struct {
+type Datastore struct {
 	AppEngineContext appengine.Context
 	kind             string
 }
 
-func NewStorage(appEngineContext appengine.Context, kind string) *Storage {
-	return &Storage{
+func NewDatastore(appEngineContext appengine.Context, kind string) *Datastore {
+	return &Datastore{
 		AppEngineContext: appEngineContext,
 		kind:             kind,
 	}
 }
 
-func (self *Storage) Save(entity interface{}) (int64, error) {
+func (self *Datastore) Save(entity interface{}) (int64, error) {
 	incKey := datastore.NewIncompleteKey(self.AppEngineContext, self.kind, nil)
 	key, err := datastore.Put(self.AppEngineContext, incKey, entity)
 	if err != nil {
@@ -27,7 +27,7 @@ func (self *Storage) Save(entity interface{}) (int64, error) {
 	return key.IntID(), nil
 }
 
-func (self *Storage) Find(id int64, entity interface{}) (int64, error) {
+func (self *Datastore) Find(id int64, entity interface{}) (int64, error) {
 	key := datastore.NewKey(self.AppEngineContext, self.kind, "", id, nil)
 	if err := datastore.Get(self.AppEngineContext, key, entity); err != nil {
 		return 0, err
@@ -36,7 +36,7 @@ func (self *Storage) Find(id int64, entity interface{}) (int64, error) {
 	return key.IntID(), nil
 }
 
-func (self *Storage) FindAll(query *datastore.Query, entities interface{}) ([]int64, error) {
+func (self *Datastore) FindAll(query *datastore.Query, entities interface{}) ([]int64, error) {
 	keys, err := query.GetAll(self.AppEngineContext, entities)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (self *Storage) FindAll(query *datastore.Query, entities interface{}) ([]in
 	return ids, nil
 }
 
-func (self *Storage) FindMulti(ids []int64, entities interface{}) error {
+func (self *Datastore) FindMulti(ids []int64, entities interface{}) error {
 	keys := make([]*datastore.Key, len(ids))
 	for i, id := range ids {
 		keys[i] = datastore.NewKey(self.AppEngineContext, self.kind, "", id, nil)
@@ -59,7 +59,7 @@ func (self *Storage) FindMulti(ids []int64, entities interface{}) error {
 	return datastore.GetMulti(self.AppEngineContext, keys, entities)
 }
 
-func (self *Storage) Update(id int64, entity interface{}) error {
+func (self *Datastore) Update(id int64, entity interface{}) error {
 	key := datastore.NewKey(self.AppEngineContext, self.kind, "", id, nil)
 	if _, err := datastore.Put(self.AppEngineContext, key, entity); err != nil {
 		return err
@@ -68,7 +68,7 @@ func (self *Storage) Update(id int64, entity interface{}) error {
 	return nil
 }
 
-func (self *Storage) Delete(id int64) error {
+func (self *Datastore) Delete(id int64) error {
 	key := datastore.NewKey(self.AppEngineContext, self.kind, "", id, nil)
 	return datastore.Delete(self.AppEngineContext, key)
 }

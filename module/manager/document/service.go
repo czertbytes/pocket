@@ -3,17 +3,17 @@ package document
 import (
 	"appengine"
 
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
 type Service struct {
 	AppEngineContext appengine.Context
-	RequestContext   *shttp.RequestContext
+	RequestContext   *h.RequestContext
 	notificator      *Notificator
 }
 
-func NewService(RequestContext *shttp.RequestContext) *Service {
+func NewService(RequestContext *h.RequestContext) *Service {
 	return &Service{
 		AppEngineContext: RequestContext.AppEngineContext,
 		RequestContext:   RequestContext,

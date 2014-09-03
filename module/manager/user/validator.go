@@ -3,15 +3,15 @@ package user
 import (
 	"appengine"
 
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 )
 
 type Validator struct {
 	AppEngineContext appengine.Context
-	RequestContext   *shttp.RequestContext
+	RequestContext   *h.RequestContext
 }
 
-func NewValidator(RequestContext *shttp.RequestContext) *Validator {
+func NewValidator(RequestContext *h.RequestContext) *Validator {
 	return &Validator{
 		AppEngineContext: RequestContext.AppEngineContext,
 		RequestContext:   RequestContext,

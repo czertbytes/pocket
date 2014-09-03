@@ -36,7 +36,7 @@ func parseAuthHeader(request *http.Request) (t.ClientClientId, string) {
 	}
 
 	var authHash string
-	if _, err := fmt.Sscanf(fullAuthHeader, "Auth=%s", &authHash); err != nil {
+	if _, err := fmt.Sscanf(fullAuthHeader, "Bearer %s", &authHash); err != nil {
 		return t.ClientClientId(""), ""
 	}
 

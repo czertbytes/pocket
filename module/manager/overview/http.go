@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/url"
 
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
@@ -12,7 +12,7 @@ const (
 	LocationPath = "http://api.tripmoneymgmt.com/manager/overviews"
 )
 
-func Post(url *url.URL, header http.Header, overview *t.Overview, requestContext *shttp.RequestContext) (int, http.Header, *t.Overview, error) {
+func Post(url *url.URL, header http.Header, overview *t.Overview, requestContext *h.RequestContext) (int, http.Header, *t.Overview, error) {
 	if err := NewController(requestContext).Post(overview); err != nil {
 		return 0, nil, nil, err
 	}
@@ -20,7 +20,7 @@ func Post(url *url.URL, header http.Header, overview *t.Overview, requestContext
 	return http.StatusCreated, nil, overview, nil
 }
 
-func Get(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, *t.Overview, error) {
+func Get(url *url.URL, header http.Header, _ interface{}, requestContext *h.RequestContext) (int, http.Header, *t.Overview, error) {
 	overview, err := NewController(requestContext).Get(url)
 	if err != nil {
 		return 0, nil, nil, err
@@ -29,7 +29,7 @@ func Get(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.
 	return http.StatusOK, nil, &overview, nil
 }
 
-func Put(url *url.URL, header http.Header, overview *t.Overview, requestContext *shttp.RequestContext) (int, http.Header, *t.Overview, error) {
+func Put(url *url.URL, header http.Header, overview *t.Overview, requestContext *h.RequestContext) (int, http.Header, *t.Overview, error) {
 	if err := NewController(requestContext).Put(url, overview); err != nil {
 		return 0, nil, nil, err
 	}
@@ -37,7 +37,7 @@ func Put(url *url.URL, header http.Header, overview *t.Overview, requestContext 
 	return http.StatusOK, nil, overview, nil
 }
 
-func Patch(url *url.URL, header http.Header, overview *t.Overview, requestContext *shttp.RequestContext) (int, http.Header, *t.Overview, error) {
+func Patch(url *url.URL, header http.Header, overview *t.Overview, requestContext *h.RequestContext) (int, http.Header, *t.Overview, error) {
 	if err := NewController(requestContext).Patch(url, overview); err != nil {
 		return 0, nil, nil, err
 	}
@@ -45,7 +45,7 @@ func Patch(url *url.URL, header http.Header, overview *t.Overview, requestContex
 	return http.StatusOK, nil, overview, nil
 }
 
-func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, interface{}, error) {
+func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *h.RequestContext) (int, http.Header, interface{}, error) {
 	if err := NewController(requestContext).Delete(url); err != nil {
 		return 0, nil, nil, err
 	}
@@ -53,7 +53,7 @@ func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *sht
 	return http.StatusNoContent, nil, nil, nil
 }
 
-func PostPayments(url *url.URL, header http.Header, payment *t.Payment, requestContext *shttp.RequestContext) (int, http.Header, *t.Payment, error) {
+func PostPayments(url *url.URL, header http.Header, payment *t.Payment, requestContext *h.RequestContext) (int, http.Header, *t.Payment, error) {
 	if err := NewController(requestContext).PostOverviewPayment(payment); err != nil {
 		return 0, nil, nil, err
 	}
@@ -61,7 +61,7 @@ func PostPayments(url *url.URL, header http.Header, payment *t.Payment, requestC
 	return http.StatusCreated, nil, payment, nil
 }
 
-func GetPayments(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, t.Payments, error) {
+func GetPayments(url *url.URL, header http.Header, _ interface{}, requestContext *h.RequestContext) (int, http.Header, t.Payments, error) {
 	payments, err := NewController(requestContext).GetOverviewPayments(url)
 	if err != nil {
 		return 0, nil, nil, err
@@ -70,7 +70,7 @@ func GetPayments(url *url.URL, header http.Header, _ interface{}, requestContext
 	return http.StatusOK, nil, payments, nil
 }
 
-func PostParticipants(url *url.URL, header http.Header, user *t.User, requestContext *shttp.RequestContext) (int, http.Header, *t.User, error) {
+func PostParticipants(url *url.URL, header http.Header, user *t.User, requestContext *h.RequestContext) (int, http.Header, *t.User, error) {
 	if err := NewController(requestContext).PostOverviewParticipant(user); err != nil {
 		return 0, nil, nil, err
 	}
@@ -78,7 +78,7 @@ func PostParticipants(url *url.URL, header http.Header, user *t.User, requestCon
 	return http.StatusCreated, nil, user, nil
 }
 
-func GetParticipants(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, t.Users, error) {
+func GetParticipants(url *url.URL, header http.Header, _ interface{}, requestContext *h.RequestContext) (int, http.Header, t.Users, error) {
 	participants, err := NewController(requestContext).GetOverviewParticipants(url)
 	if err != nil {
 		return 0, nil, nil, err

@@ -6,18 +6,18 @@ import (
 	"appengine"
 
 	c "github.com/czertbytes/pocket/pkg/comments"
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
 type Service struct {
 	AppEngineContext appengine.Context
-	RequestContext   *shttp.RequestContext
+	RequestContext   *h.RequestContext
 	notificator      *Notificator
 	Comments         *c.Comments
 }
 
-func NewService(RequestContext *shttp.RequestContext) *Service {
+func NewService(RequestContext *h.RequestContext) *Service {
 	return &Service{
 		AppEngineContext: RequestContext.AppEngineContext,
 		RequestContext:   RequestContext,

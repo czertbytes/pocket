@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/url"
 
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
@@ -12,7 +12,7 @@ const (
 	LocationPath = "http://api.tripmoneymgmt.com/manager/clients"
 )
 
-func Post(url *url.URL, header http.Header, client *t.Client, requestContext *shttp.RequestContext) (int, http.Header, *t.Client, error) {
+func Post(url *url.URL, header http.Header, client *t.Client, requestContext *h.RequestContext) (int, http.Header, *t.Client, error) {
 	if err := NewController(requestContext).Post(client); err != nil {
 		return 0, nil, nil, err
 	}
@@ -20,7 +20,7 @@ func Post(url *url.URL, header http.Header, client *t.Client, requestContext *sh
 	return http.StatusCreated, nil, client, nil
 }
 
-func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *shttp.RequestContext) (int, http.Header, interface{}, error) {
+func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *h.RequestContext) (int, http.Header, interface{}, error) {
 	if err := NewController(requestContext).Delete(url); err != nil {
 		return 0, nil, nil, err
 	}

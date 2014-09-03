@@ -7,7 +7,7 @@ import (
 	"appengine"
 	"appengine/datastore"
 
-	"github.com/czertbytes/pocket/pkg/gae"
+	gs "github.com/czertbytes/pocket/pkg/google/storage"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
@@ -21,13 +21,13 @@ var (
 
 type Storage struct {
 	AppEngineContext appengine.Context
-	storage          *gae.Storage
+	storage          *gs.Datastore
 }
 
 func NewStorage(appEngineContext appengine.Context) *Storage {
 	return &Storage{
 		AppEngineContext: appEngineContext,
-		storage:          gae.NewStorage(appEngineContext, kind),
+		storage:          gs.NewDatastore(appEngineContext, kind),
 	}
 }
 

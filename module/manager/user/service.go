@@ -6,7 +6,7 @@ import (
 	"appengine"
 
 	c "github.com/czertbytes/pocket/pkg/comments"
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	o "github.com/czertbytes/pocket/pkg/overviews"
 	p "github.com/czertbytes/pocket/pkg/payments"
 	t "github.com/czertbytes/pocket/pkg/types"
@@ -19,7 +19,7 @@ var (
 
 type Service struct {
 	AppEngineContext appengine.Context
-	RequestContext   *shttp.RequestContext
+	RequestContext   *h.RequestContext
 	notificator      *Notificator
 	Overviews        *o.Overviews
 	Payments         *p.Payments
@@ -27,7 +27,7 @@ type Service struct {
 	Users            *u.Users
 }
 
-func NewService(RequestContext *shttp.RequestContext) *Service {
+func NewService(RequestContext *h.RequestContext) *Service {
 	return &Service{
 		AppEngineContext: RequestContext.AppEngineContext,
 		RequestContext:   RequestContext,

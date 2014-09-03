@@ -3,16 +3,16 @@ package payment
 import (
 	"appengine"
 
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
 type Notificator struct {
 	AppEngineContext appengine.Context
-	RequestContext   *shttp.RequestContext
+	RequestContext   *h.RequestContext
 }
 
-func NewNotificator(RequestContext *shttp.RequestContext) *Notificator {
+func NewNotificator(RequestContext *h.RequestContext) *Notificator {
 	return &Notificator{
 		AppEngineContext: RequestContext.AppEngineContext,
 		RequestContext:   RequestContext,

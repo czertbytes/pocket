@@ -6,18 +6,18 @@ import (
 
 	"appengine"
 
-	shttp "github.com/czertbytes/pocket/pkg/http"
+	h "github.com/czertbytes/pocket/pkg/http"
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
 type Controller struct {
 	AppEngineContext appengine.Context
-	RequestContext   *shttp.RequestContext
+	RequestContext   *h.RequestContext
 	validator        *Validator
 	service          *Service
 }
 
-func NewController(RequestContext *shttp.RequestContext) *Controller {
+func NewController(RequestContext *h.RequestContext) *Controller {
 	return &Controller{
 		AppEngineContext: RequestContext.AppEngineContext,
 		RequestContext:   RequestContext,
