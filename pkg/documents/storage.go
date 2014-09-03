@@ -1,6 +1,7 @@
 package documents
 
 import (
+	"mime/multipart"
 	"time"
 
 	"appengine"
@@ -17,12 +18,14 @@ const (
 type Storage struct {
 	AppEngineContext appengine.Context
 	storage          *gs.Datastore
+	cloud            *gs.Cloud
 }
 
 func NewStorage(appEngineContext appengine.Context) *Storage {
 	return &Storage{
 		AppEngineContext: appEngineContext,
 		storage:          gs.NewDatastore(appEngineContext, kind),
+		cloud:            gs.NewCloud(appEngineContext),
 	}
 }
 
@@ -41,6 +44,24 @@ func (self *Storage) Save(document *t.Document) error {
 	document.SetFormattedValues()
 
 	return nil
+}
+
+func (self *Storage) SaveFile(part *multipart.Part) (*gs.CloudObject, error) {
+	name := t.Hash(
+		"a3ebf9b990440119c8dbc27cf1ba81be",
+		part.FileName(),
+	)
+
+	cloudObject := gs.NewCloudObject(part).
+		WithBucket("document").
+		WithObjectName(name).
+		WithContentType(part.Header["Content-Type"][0])
+
+	if err := self.cloud.Save(cloudObject); err != nil {
+		return nil, err
+	}
+
+	return cloudObject, nil
 }
 
 func (self *Storage) FindAllByStatus(status t.DocumentStatus) (t.Documents, error) {

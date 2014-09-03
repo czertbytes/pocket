@@ -1,6 +1,8 @@
 package payment
 
 import (
+	"fmt"
+	"io"
 	"net/url"
 	"strings"
 
@@ -57,8 +59,17 @@ func (self *Controller) Delete(url *url.URL) error {
 	return self.service.Delete(t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
-func (self *Controller) PostDocuments() error {
-	return nil
+func (self *Controller) PostDocuments(url *url.URL) error {
+	part, err := self.RequestContext.MultipartReader.NextPart()
+	if err == io.EOF {
+		return fmt.Errorf("There is no file!")
+	}
+
+	if err := self.validator.CreateDocument(part); err != nil {
+		return err
+	}
+
+	return self.service.CreateDocument(part, t.PaymentId(self.RequestContext.EntityId), self.RequestContext.User)
 }
 
 func (self *Controller) GetDocuments(url *url.URL) (t.Documents, error) {

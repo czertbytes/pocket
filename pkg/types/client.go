@@ -1,11 +1,6 @@
 package types
 
-import (
-	"crypto/sha1"
-	"fmt"
-	"io"
-	"time"
-)
+import "time"
 
 type ClientId int64
 type ClientIds []ClientId
@@ -77,7 +72,7 @@ func (self *Client) SetStatusFormatted() {
 }
 
 func (self *Client) GenerateClientId() {
-	clientId := hash(
+	clientId := Hash(
 		"53088f0c8f7e74488e07807dfc022542",
 		self.Id,
 	)
@@ -86,7 +81,7 @@ func (self *Client) GenerateClientId() {
 }
 
 func (self *Client) RegenerateToken() {
-	tokenValue := hash(
+	tokenValue := Hash(
 		"eb3b8da16fda97e84f6a13b2f94cda93",
 		self.ClientId,
 		self.Id,
@@ -99,15 +94,3 @@ func (self *Client) RegenerateToken() {
 }
 
 type Clients []Client
-
-func hash(values ...interface{}) string {
-	hash := sha1.New()
-
-	for _, value := range values {
-		io.WriteString(hash, fmt.Sprintf("%s", value))
-	}
-
-	io.WriteString(hash, fmt.Sprintf("timestamp%d", time.Now().UnixNano()))
-
-	return fmt.Sprintf("%x", hash.Sum(nil))
-}

@@ -46,7 +46,7 @@ func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *h.R
 }
 
 func PostDocuments(url *url.URL, header http.Header, requestContext *h.RequestContext) (int, http.Header, interface{}, error) {
-	if err := NewController(requestContext).PostDocuments(); err != nil {
+	if err := NewController(requestContext).PostDocuments(url); err != nil {
 		return 0, nil, nil, err
 	}
 

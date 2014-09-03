@@ -1,6 +1,10 @@
 package payment
 
 import (
+	"fmt"
+	"mime/multipart"
+	"strings"
+
 	"appengine"
 
 	h "github.com/czertbytes/pocket/pkg/http"
@@ -28,6 +32,23 @@ func (self *Validator) Update(payment *t.Payment) error {
 }
 
 func (self *Validator) Patch(payment *t.Payment, fields []string) error {
+	return nil
+}
+
+func (self *Validator) CreateDocument(part *multipart.Part) error {
+	fileName := part.FileName()
+
+	hasAllowedSuffix := false
+	for _, suffix := range []string{"jpg", "png"} {
+		if strings.HasSuffix(fileName, suffix) {
+			hasAllowedSuffix = true
+		}
+	}
+
+	if !hasAllowedSuffix {
+		return fmt.Errorf("File suffix is not supported!")
+	}
+
 	return nil
 }
 

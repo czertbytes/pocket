@@ -2,6 +2,7 @@ package payment
 
 import (
 	"fmt"
+	"mime/multipart"
 
 	"appengine"
 
@@ -98,8 +99,7 @@ func (self *Service) Delete(id t.PaymentId, user *t.User) error {
 	return nil
 }
 
-func (self *Service) CreateDocument(user *t.User) error {
-	// TODO: implement me!
+func (self *Service) CreateDocument(part *multipart.Part, id t.PaymentId, user *t.User) error {
 	return nil
 }
 
