@@ -80,6 +80,10 @@ func (self *Client) GenerateClientId() {
 	self.ClientId = ClientClientId(clientId)
 }
 
+var (
+	ClientTokenExpirationTime time.Duration = 8 * time.Hour
+)
+
 func (self *Client) RegenerateToken() {
 	tokenValue := Hash(
 		"eb3b8da16fda97e84f6a13b2f94cda93",
@@ -87,9 +91,12 @@ func (self *Client) RegenerateToken() {
 		self.Id,
 	)
 
+	location, _ := time.LoadLocation(DefaultLocation)
+	now := time.Now().In(location)
+
 	self.ClientToken = ClientToken{
 		Value:    tokenValue,
-		ExpireAt: time.Now().Add(4 * time.Hour),
+		ExpireAt: now.Add(ClientTokenExpirationTime),
 	}
 }
 

@@ -2,8 +2,11 @@ package proof
 
 import (
 	"fmt"
+	"time"
 
 	"appengine"
+	"appengine/delay"
+	"appengine/taskqueue"
 
 	c "github.com/czertbytes/pocket/pkg/clients"
 	s "github.com/czertbytes/pocket/pkg/social"
@@ -65,14 +68,8 @@ func (self *Proof) Login(client *t.Client) error {
 		}
 	}
 
-	newClient, err := self.Clients.FindByUserId(user.Id)
+	newClient, err := self.updateClient(user.Id)
 	if err != nil {
-		return nil
-	}
-
-	newClient.RegenerateToken()
-
-	if _, err := self.Clients.Update(newClient); err != nil {
 		return err
 	}
 
@@ -110,3 +107,58 @@ func (self *Proof) validateAuthToken(authOrigin t.AuthOrigin) (s.Profile, error)
 
 	return fetcher.Fetch(authOrigin.EntityId, authOrigin.Token)
 }
+
+func (self *Proof) updateClient(userId t.UserId) (t.Client, error) {
+	client, err := self.Clients.FindByUserId(userId)
+	if err != nil {
+		return t.Client{}, nil
+	}
+
+	client.RegenerateToken()
+
+	if _, err := self.Clients.Update(client); err != nil {
+		return t.Client{}, err
+	}
+
+	if err := self.expireTokenTask(client.Id); err != nil {
+		return t.Client{}, err
+	}
+
+	return client, nil
+}
+
+func (self *Proof) expireTokenTask(id t.ClientId) error {
+	checkExpiredClientTokenTask, err := checkExpiredClientTokenFunc.Task(id)
+	if err != nil {
+		return err
+	}
+
+	checkExpiredClientTokenTask.Delay = t.ClientTokenExpirationTime
+	if _, err := taskqueue.Add(self.AppEngineContext, checkExpiredClientTokenTask, "check-expired-tokens"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var checkExpiredClientTokenFunc = delay.Func("expired-client-token", func(appEngineContext appengine.Context, id t.ClientId) {
+	Clients := c.NewClients(appEngineContext)
+
+	client, err := Clients.Find(id)
+	if err != nil {
+		appEngineContext.Errorf("proof: Finding Client for expiration failed with error %s!", err)
+		return
+	}
+
+	location, _ := time.LoadLocation(t.DefaultLocation)
+	now := time.Now().In(location)
+
+	if client.ClientToken.ExpireAt.Before(now) {
+		client.RegenerateToken()
+
+		if _, err := Clients.Update(client); err != nil {
+			appEngineContext.Errorf("proof: Regenerating expired Client token failed with error %s!", err)
+			return
+		}
+	}
+})
