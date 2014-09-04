@@ -81,10 +81,10 @@ func TestComputeUserAccounts(t *testing.T) {
 			}
 		case 200:
 			if userAccount.Balances[100].Value != -4 {
-				t.Fatalf("UserAccount %d has wrong balance with 100! Expected -4 but got %d", userAccount.User.Id, userAccount.Balances[200].Value)
+				t.Fatalf("UserAccount %d has wrong balance with 100! Expected -4 but got %d", userAccount.User.Id, userAccount.Balances[100].Value)
 			}
 			if userAccount.Balances[201].Value != 3 {
-				t.Fatalf("UserAccount %d has wrong balance with 201! Expected 3 but got %d", userAccount.User.Id, userAccount.Balances[200].Value)
+				t.Fatalf("UserAccount %d has wrong balance with 201! Expected 3 but got %d", userAccount.User.Id, userAccount.Balances[201].Value)
 			}
 		case 201:
 			if userAccount.Balances[200].Value != -3 {

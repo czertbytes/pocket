@@ -116,6 +116,30 @@ func (self *Storage) FindByClientIdAndToken(clientId t.ClientClientId, token str
 	return t.Client{}, ErrClientNotFound
 }
 
+func (self *Storage) FindByUserId(userId t.UserId) (t.Client, error) {
+	var clients t.Clients
+
+	query := datastore.NewQuery(kind).
+		Filter("user_id =", userId).
+		Filter("status =", t.ClientStatusActive)
+
+	ids, err := self.storage.FindAll(query, &clients)
+	if err != nil {
+		return t.Client{}, err
+	}
+
+	if len(ids) == 0 {
+		return t.Client{}, ErrClientNotFound
+	}
+
+	for i, _ := range clients {
+		clients[i].Id = t.ClientId(ids[i])
+		clients[i].SetFormattedValues()
+	}
+
+	return clients[0], nil
+}
+
 func (self *Storage) FindMulti(ids t.ClientIds) (t.Clients, error) {
 	var clients t.Clients
 

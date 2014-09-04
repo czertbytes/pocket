@@ -10,6 +10,7 @@ import (
 	p "github.com/czertbytes/pocket/pkg/payments"
 	t "github.com/czertbytes/pocket/pkg/types"
 	u "github.com/czertbytes/pocket/pkg/users"
+	uo "github.com/czertbytes/pocket/pkg/users/overviews"
 )
 
 var (
@@ -22,6 +23,7 @@ type Service struct {
 	notificator      *Notificator
 	Overviews        *o.Overviews
 	Users            *u.Users
+	UserOverviews    *uo.Overviews
 	Payments         *p.Payments
 }
 
@@ -32,6 +34,7 @@ func NewService(RequestContext *h.RequestContext) *Service {
 		notificator:      NewNotificator(RequestContext),
 		Overviews:        o.NewOverviews(RequestContext.AppEngineContext),
 		Users:            u.NewUsers(RequestContext.AppEngineContext),
+		UserOverviews:    uo.NewOverviews(RequestContext.AppEngineContext),
 		Payments:         p.NewPayments(RequestContext.AppEngineContext),
 	}
 }
@@ -156,18 +159,36 @@ func (self *Service) FindAllPayments(id t.OverviewId, user *t.User) (t.Payments,
 }
 
 func (self *Service) CreateParticipant(participant *t.User, id t.OverviewId, user *t.User) error {
-	overview, err := self.getOverview(id, user)
-	if err != nil {
+	if _, err := self.getOverview(id, user); err != nil {
 		return err
 	}
 
-	participant.OverviewId = overview.Id
-	if err := self.Users.Create(participant); err != nil {
-		return err
-	}
+	if len(participant.Email) > 0 {
+		user, err := self.Users.FindByEmail(participant.Email)
+		if err != nil {
+			if err != u.ErrUserNotFound {
+				return err
+			}
 
-	if err := self.notificator.CreateParticipant(participant); err != nil {
-		return err
+			if err := self.Users.Create(participant); err != nil {
+				return err
+			}
+
+			user = *participant
+		}
+
+		userOverview := &t.UserOverview{
+			Status:     t.UserOverviewStatusActive,
+			OverviewId: id,
+			UserId:     user.Id,
+		}
+		if err := self.UserOverviews.Create(userOverview); err != nil {
+			return err
+		}
+
+		if err := self.notificator.CreateParticipant(&user); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -178,7 +199,17 @@ func (self *Service) FindAllParticipants(id t.OverviewId, user *t.User) (t.Users
 		return nil, err
 	}
 
-	overviewParticipants, err := self.Users.FindAllByOverviewId(id)
+	userOverviews, err := self.UserOverviews.FindAllByOverviewId(id)
+	if err != nil {
+		return nil, err
+	}
+
+	participantIds := make(t.UserIds, len(userOverviews))
+	for i, userOverview := range userOverviews {
+		participantIds[i] = userOverview.UserId
+	}
+
+	overviewParticipants, err := self.Users.FindMulti(participantIds)
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +229,17 @@ func (self *Service) getOverview(id t.OverviewId, user *t.User) (t.Overview, err
 		return overview, nil
 	}
 
-	overviewParticipants, err := self.Users.FindAllByOverviewId(id)
+	userOverviews, err := self.UserOverviews.FindAllByOverviewId(id)
+	if err != nil {
+		return t.Overview{}, err
+	}
+
+	participantIds := make(t.UserIds, len(userOverviews))
+	for i, userOverview := range userOverviews {
+		participantIds[i] = userOverview.UserId
+	}
+
+	overviewParticipants, err := self.Users.FindMulti(participantIds)
 	if err != nil {
 		return t.Overview{}, err
 	}

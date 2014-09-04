@@ -53,9 +53,8 @@ type User struct {
 	Email    string `json:"email" datastore:"email" siren:"property"`
 
 	// Internal fields
-	OverviewId   OverviewId `json:"-" datastore:"overview_id"`
-	GooglePlusId string     `json:"-" datastore:"google_plus_id"`
-	FacebookId   string     `json:"-" datastore:"facebook_id"`
+	GooglePlusId string `json:"-" datastore:"google_plus_id"`
+	FacebookId   string `json:"-" datastore:"facebook_id"`
 }
 
 func (self *User) SetFormattedValues() {

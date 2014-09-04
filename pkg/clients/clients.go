@@ -59,6 +59,10 @@ func (self *Clients) FindByClientIdAndToken(clientId t.ClientClientId, token str
 	return self.Storage.FindByClientIdAndToken(clientId, token)
 }
 
+func (self *Clients) FindByUserId(userId t.UserId) (t.Client, error) {
+	return self.Storage.FindByUserId(userId)
+}
+
 func (self *Clients) FindMulti(ids t.ClientIds) (t.Clients, error) {
 	clients, err := self.Storage.FindMulti(ids)
 	if err != nil {
