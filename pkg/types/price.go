@@ -11,3 +11,5 @@ type Price struct {
 func (self *Price) SetValueFormatted() {
 	self.ValueFormatted = fmt.Sprintf("%d %s", self.Value, self.Currency)
 }
+
+type Prices []Price

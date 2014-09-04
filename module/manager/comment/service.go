@@ -10,6 +10,10 @@ import (
 	t "github.com/czertbytes/pocket/pkg/types"
 )
 
+var (
+	ErrCommentUnauthorized error = fmt.Errorf("comment: Unauthorized access")
+)
+
 type Service struct {
 	AppEngineContext appengine.Context
 	RequestContext   *h.RequestContext
@@ -45,7 +49,7 @@ func (self *Service) find(id t.CommentId, user *t.User) (t.Comment, error) {
 	}
 
 	if comment.UserId != user.Id {
-		return t.Comment{}, fmt.Errorf("Comment is not yours!")
+		return t.Comment{}, ErrCommentUnauthorized
 	}
 
 	return comment, nil

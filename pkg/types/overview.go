@@ -49,14 +49,15 @@ type Overview struct {
 	StatusFormatted string         `json:"status_formatted" datastore:"-"`
 
 	// Entity fields
-	URLToken     string `json:"token" datastore:"token"`
-	Name         string `json:"name" datastore:"name"`
-	Description  string `json:"description" datastore:"description"`
-	OwnerId      UserId `json:"-" datastore:"owner_id"`
-	Owner        User   `json:"owner" datastore:"-"`
-	Participants Users  `json:"participants" datastore:"-"`
-	Price        `json:"total_price" datastore:"total_price"`
-	Payments     Payments `json:"payments" datastore:"-"`
+	URLToken     string       `json:"token" datastore:"token"`
+	Name         string       `json:"name" datastore:"name"`
+	Description  string       `json:"description" datastore:"description"`
+	BaseCurrency string       `json:"base_currency" datastore:"base_currency"`
+	OwnerId      UserId       `json:"-" datastore:"owner_id"`
+	Owner        User         `json:"owner" datastore:"-"`
+	Participants Users        `json:"participants" datastore:"-"`
+	Payments     Payments     `json:"payments" datastore:"-"`
+	UserAccounts UserAccounts `json:"user_accounts" datastore:"-"`
 }
 
 func (self *Overview) SetFormattedValues() {
@@ -66,6 +67,50 @@ func (self *Overview) SetFormattedValues() {
 
 func (self *Overview) SetStatusFormatted() {
 	self.StatusFormatted = self.Status.String()
+}
+
+func (self *Overview) ComputeUserAccounts() {
+	userAccounts := make(map[UserId]*UserAccount)
+	for _, participant := range self.Participants {
+		userAccounts[participant.Id] = NewUserAccount(participant)
+	}
+	userAccounts[self.OwnerId] = NewUserAccount(self.Owner)
+
+	for _, payment := range self.Payments {
+		from := payment.From
+		to := payment.To
+
+		fromUserAccount, found := userAccounts[from.Id]
+		if !found {
+			continue
+		}
+		toUserAccount, found := userAccounts[to.Id]
+		if !found {
+			continue
+		}
+
+		fromToBalance, found := fromUserAccount.Balances[to.Id]
+		if !found {
+			fromToBalance = NewBalance(to)
+			fromUserAccount.Balances[to.Id] = fromToBalance
+		}
+
+		toFromBalance, found := toUserAccount.Balances[from.Id]
+		if !found {
+			toFromBalance = NewBalance(from)
+			toUserAccount.Balances[from.Id] = toFromBalance
+		}
+
+		fromToBalance.AddCredit(payment.Price)
+		toFromBalance.AddDebit(payment.Price)
+	}
+
+	self.UserAccounts = make(UserAccounts, len(self.Participants)+1)
+	i := 0
+	for _, userAccount := range userAccounts {
+		self.UserAccounts[i] = *userAccount
+		i++
+	}
 }
 
 type Overviews []Overview

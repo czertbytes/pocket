@@ -39,6 +39,12 @@ func NewService(RequestContext *h.RequestContext) *Service {
 func (self *Service) Create(overview *t.Overview, user *t.User) error {
 	overview.OwnerId = user.Id
 	overview.Owner = *user
+	overview.URLToken = t.Hash(
+		"8b2d80510b6482f95ae98449e7251c1b",
+		overview.Name,
+		overview.Description,
+		overview.OwnerId,
+	)
 
 	if err := self.Overviews.Create(overview); err != nil {
 		return err
