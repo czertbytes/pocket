@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	FacebookProfileMeURL = "https://graph.facebook.com/v2.0/me?access_token=%s&appsecret_proof=%s"
+	FacebookProfileMeURL = "https://graph.facebook.com/v2.1/me?access_token=%s&appsecret_proof=%s"
 	FacebookPictureURL   = "https://graph.facebook.com/%s/picture?redirect=0&height=320&width=320&type=square"
 )
 

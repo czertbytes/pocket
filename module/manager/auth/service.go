@@ -24,16 +24,17 @@ func NewService(RequestContext *h.RequestContext) *Service {
 	}
 }
 
-func (self *Service) Create(client *t.Client, user *t.User) error {
-	if err := self.Proof.Login(client); err != nil {
-		return err
+func (self *Service) Create(client *t.Client, user *t.User) (t.Client, error) {
+	newClient, err := self.Proof.Login(client)
+	if err != nil {
+		return t.Client{}, err
 	}
 
-	if err := self.notificator.Create(client); err != nil {
-		return err
+	if err := self.notificator.Create(&newClient); err != nil {
+		return t.Client{}, err
 	}
 
-	return nil
+	return newClient, nil
 }
 
 func (self *Service) Delete(id t.ClientId, user *t.User) error {

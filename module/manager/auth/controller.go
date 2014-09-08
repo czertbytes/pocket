@@ -25,9 +25,9 @@ func NewController(RequestContext *h.RequestContext) *Controller {
 	}
 }
 
-func (self *Controller) Post(client *t.Client) error {
+func (self *Controller) Post(client *t.Client) (t.Client, error) {
 	if err := self.validator.Create(client); err != nil {
-		return err
+		return t.Client{}, err
 	}
 
 	return self.service.Create(client, self.RequestContext.User)

@@ -78,7 +78,7 @@ func (self *Storage) FindAllActive() (t.Clients, error) {
 func (self *Storage) Find(id t.ClientId) (t.Client, error) {
 	var client t.Client
 
-	if _, err := self.storage.Find(int64(id), client); err != nil {
+	if _, err := self.storage.Find(int64(id), &client); err != nil {
 		return t.Client{}, err
 	}
 
@@ -120,7 +120,7 @@ func (self *Storage) FindByUserId(userId t.UserId) (t.Client, error) {
 	var clients t.Clients
 
 	query := datastore.NewQuery(kind).
-		Filter("user_id =", userId).
+		Filter("user_id =", int64(userId)).
 		Filter("status =", t.ClientStatusActive)
 
 	ids, err := self.storage.FindAll(query, &clients)
@@ -164,7 +164,7 @@ func (self *Storage) Update(client t.Client) (t.Client, error) {
 	now := time.Now().In(location)
 	client.SetModifiedAt(now)
 
-	if err := self.storage.Update(int64(client.Id), client); err != nil {
+	if err := self.storage.Update(int64(client.Id), &client); err != nil {
 		return t.Client{}, err
 	}
 

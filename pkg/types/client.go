@@ -67,6 +67,11 @@ func (self *Client) SetFormattedValues() {
 	self.AuthOrigin.SetFormattedValues()
 }
 
+func (self *Client) SetTimes() {
+	self.BaseEntity.SetTimes()
+	self.ClientToken.SetTimes()
+}
+
 func (self *Client) SetStatusFormatted() {
 	self.StatusFormatted = self.Status.String()
 }
@@ -95,9 +100,10 @@ func (self *Client) RegenerateToken() {
 	now := time.Now().In(location)
 
 	self.ClientToken = ClientToken{
-		Value:    tokenValue,
-		ExpireAt: now.Add(ClientTokenExpirationTime),
+		Value:        tokenValue,
+		ExpireAtTime: now.Add(ClientTokenExpirationTime),
 	}
+	self.ClientToken.SetTimes()
 }
 
 type Clients []Client

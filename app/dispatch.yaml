@@ -3,3 +3,6 @@ application: pocket
 dispatch:
 - url: "*/manager/*"
   module: manager
+
+- url: "*/_ah/queue/go/delay"
+  module: manager

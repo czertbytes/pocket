@@ -78,7 +78,7 @@ func (self *Storage) FindAllActive() (t.Users, error) {
 func (self *Storage) Find(id t.UserId) (t.User, error) {
 	var user t.User
 
-	if _, err := self.storage.Find(int64(id), user); err != nil {
+	if _, err := self.storage.Find(int64(id), &user); err != nil {
 		return t.User{}, err
 	}
 

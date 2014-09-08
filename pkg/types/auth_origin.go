@@ -31,10 +31,10 @@ var (
 )
 
 type AuthOrigin struct {
-	Service          AuthOriginService `json:"auth_origin_service"`
-	ServiceFormatted string            `json:"auth_origin_service_formatted"`
-	EntityId         string            `json:"auth_origin_entity_id"`
-	Token            string            `json:"auth_origin_token"`
+	Service          AuthOriginService `json:"auth_origin_service" datastore:"-"`
+	ServiceFormatted string            `json:"auth_origin_service_formatted" datastore:"-"`
+	EntityId         string            `json:"auth_origin_entity_id" datastore:"-"`
+	Token            string            `json:"auth_origin_token" datastore:"-"`
 }
 
 func (self *AuthOrigin) SetFormattedValues() {

@@ -13,11 +13,12 @@ const (
 )
 
 func Post(url *url.URL, header http.Header, client *t.Client, requestContext *h.RequestContext) (int, http.Header, *t.Client, error) {
-	if err := NewController(requestContext).Post(client); err != nil {
+	newClient, err := NewController(requestContext).Post(client)
+	if err != nil {
 		return 0, nil, nil, err
 	}
 
-	return http.StatusCreated, nil, client, nil
+	return http.StatusCreated, nil, &newClient, nil
 }
 
 func Delete(url *url.URL, header http.Header, _ interface{}, requestContext *h.RequestContext) (int, http.Header, interface{}, error) {
